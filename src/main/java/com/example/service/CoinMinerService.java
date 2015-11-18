@@ -4,6 +4,13 @@
 */
 package com.example.service;
 
+import com.example.api.CoinMiner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import rx.Observable;
+import rx.subjects.ReplaySubject;
+
 import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.util.List;
@@ -11,13 +18,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import com.example.api.CoinMiner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import rx.Observable;
-import rx.subjects.ReplaySubject;
 
 /**
  * @author zzhao

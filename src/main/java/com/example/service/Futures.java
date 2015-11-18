@@ -4,11 +4,11 @@
 */
 package com.example.service;
 
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-
 import rx.Observable;
 import rx.Single;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author zzhao
@@ -19,8 +19,7 @@ public class Futures {
         return Observable.create(s -> future.whenComplete((result, error) -> {
             if (error != null) {
                 s.onError(error);
-            }
-            else {
+            } else {
                 s.onNext(result);
                 s.onCompleted();
             }
@@ -31,8 +30,7 @@ public class Futures {
         return Single.create(s -> future.whenComplete((result, error) -> {
             if (error != null) {
                 s.onError(error);
-            }
-            else {
+            } else {
                 s.onSuccess(result);
             }
         }));

@@ -28,12 +28,14 @@ repositories {
 ext {
     rxJavaVersion = '1.0.16'
     lombokVersion = '1.16.6'
+    guavaVersion = '19.0-rc2'
 }
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile("io.reactivex:rxjava:${rxJavaVersion}")
     compile("org.projectlombok:lombok:${lombokVersion}")
+    compile("com.google.guava:guava:${guavaVersion}")
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }

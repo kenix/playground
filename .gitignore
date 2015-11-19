@@ -3,4 +3,6 @@ gradlew.bat
 gradle
 build
 *.iml
-*.idea
+*.ipr
+*.iws
+.idea

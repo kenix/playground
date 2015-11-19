@@ -24,4 +24,18 @@ class ObservableQueueSpec extends Specification {
         then:
         "[1, 2]".equals(result.toString())
     }
+
+    def "subject based observable queue should work"() {
+        given:
+        def ooq = new SubjectQueue<Integer>()
+        def result = []
+        ooq.observe().subscribe { i -> result << i }
+
+        when:
+        ooq.offer(1)
+        ooq.offer(2)
+
+        then:
+        "[1, 2]".equals(result.toString())
+    }
 }

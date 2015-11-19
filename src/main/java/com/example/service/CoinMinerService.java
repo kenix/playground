@@ -5,8 +5,7 @@
 package com.example.service;
 
 import com.example.api.CoinMiner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import rx.Observable;
 import rx.subjects.ReplaySubject;
@@ -23,9 +22,8 @@ import java.util.stream.IntStream;
  * @author zzhao
  */
 @Service
+@Slf4j
 public class CoinMinerService implements CoinMiner {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final SecureRandom random = new SecureRandom(Double.toHexString(
             System.currentTimeMillis()).getBytes());
@@ -35,12 +33,12 @@ public class CoinMinerService implements CoinMiner {
         try {
             Thread.sleep((1 + this.random.nextInt(3)) * 1000L);
         } catch (InterruptedException e) {
-            this.logger.error("<mine> mining interrupted");
+            log.error("<mine> mining interrupted");
             Thread.currentThread().interrupt();
         }
 
         final BigDecimal result = BigDecimal.valueOf(this.random.nextDouble());
-        this.logger.info("<mine> {}", result.toPlainString());
+        log.info("<mine> {}", result.toPlainString());
         return result;
     }
 
@@ -61,7 +59,7 @@ public class CoinMinerService implements CoinMiner {
                     .join();
             subject.onCompleted();
         } catch (Exception e) {
-            this.logger.error("<mineMany> ", e);
+            log.error("<mineMany> ", e);
             subject.onError(e);
         }
         return subject;

@@ -4,28 +4,26 @@
 */
 package com.example.web;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
 import com.example.api.CoinMiner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author zzhao
  */
 @RestController
+@Slf4j
 public class MiningController {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final CoinMiner coinMiner;
 
@@ -57,7 +55,7 @@ public class MiningController {
         try {
             emitter.send(val);
         } catch (IOException e) {
-            this.logger.error("<notifyProgress> ", e);
+            log.error("<notifyProgress> ", e);
         }
     }
 }

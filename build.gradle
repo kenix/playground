@@ -38,6 +38,7 @@ dependencies {
     compile("io.reactivex:rxjava:${rxJavaVersion}")
     compile("org.projectlombok:lombok:${lombokVersion}")
     compile("com.google.guava:guava:${guavaVersion}")
+    compile("net.sf.ehcache:ehcache")
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile("org.codehaus.groovy:groovy-all:${groovyVersion}")

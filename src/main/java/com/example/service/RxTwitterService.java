@@ -40,9 +40,8 @@ public class RxTwitterService implements RxTwitter {
         this.twitterStream = CompletableFuture
                 .supplyAsync(() -> new TwitterStreamFactory().getInstance())
                 .thenApply(ts -> {
-                    log.info("<RxTwitterService> setting up status subject ...");
+                    log.info("<RxTwitterService> set up twitter subject");
                     ts.addListener(new SubscriberAdapter(this.subject));
-                    log.info("<RxTwitterService> sampling started");
                     ts.sample();
                     return ts;
                 }).exceptionally(ex -> { // TODO: timed re-establish

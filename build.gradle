@@ -28,6 +28,8 @@ repositories {
 
 ext {
     rxJavaVersion = '1.0.16'
+    rxJavaStringVersion = '1.0.1'
+    rxNettyVersion = '0.5.1'
     lombokVersion = '1.16.6'
     guavaVersion = '19.0-rc2'
     groovyVersion = '2.4.5'
@@ -41,6 +43,8 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-rest')
     compile("com.h2database:h2")
     compile("io.reactivex:rxjava:${rxJavaVersion}")
+    compile("io.reactivex:rxjava-string:${rxJavaStringVersion}")
+    compile("io.reactivex:rxnetty:${rxNettyVersion}")
     compile("org.projectlombok:lombok:${lombokVersion}")
     compile("com.google.guava:guava:${guavaVersion}")
     compile("net.sf.ehcache:ehcache")

@@ -1,0 +1,14 @@
+spring:
+  profiles: dev,test
+  h2:
+    console:
+      enabled: true
+      path: "/h2c"
+server:
+  port: 10101
+---
+spring:
+  profiles: prod
+  h2:
+    console:
+      enabled: false

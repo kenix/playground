@@ -35,6 +35,10 @@ ext {
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
+    // compile('org.springframework.boot:spring-boot-starter-security')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-data-rest')
+    compile("com.h2database:h2")
     compile("io.reactivex:rxjava:${rxJavaVersion}")
     compile("org.projectlombok:lombok:${lombokVersion}")
     compile("com.google.guava:guava:${guavaVersion}")
@@ -43,8 +47,4 @@ dependencies {
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile("org.codehaus.groovy:groovy-all:${groovyVersion}")
     testCompile("org.spockframework:spock-spring")
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.7'
 }

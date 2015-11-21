@@ -37,10 +37,11 @@ public class RxTwitterController {
      * Stream public twitter tweets for given milliseconds.
      * <p>
      * If no tweets can be streamed, the returned stream will timeout after given millisecond plus half second.
+     * TODO: enable filter on language, hashtag, user etc..
      *
      * @param millis milliseconds to stream, supports upto {@value Short#MAX_VALUE}
      * @return Stream of tweets in following format:
-     * <pre>[{elapsed milliseconds from last received tweet}] @{user.name}> {tweet text}</pre>
+     * <pre>[{elapsed milliseconds from last received tweet}@{user.name}#{language}] {tweet text}</pre>
      */
     @RequestMapping(value = "/{millis}", method = RequestMethod.GET)
     public SseEmitter streamTimed(@PathVariable short millis) {
@@ -59,9 +60,10 @@ public class RxTwitterController {
     }
 
     private void sendTweet(TimeInterval<Status> tweet, SseEmitter emitter, StringBuilder sb) {
-        sb.append(" [").append(tweet.getIntervalInMilliseconds()).append(" ms] @")
+        sb.append("[").append(tweet.getIntervalInMilliseconds()).append("ms@")
                 .append(tweet.getValue().getUser().getName())
-                .append("> ").append(tweet.getValue().getText());
+                .append("#").append(tweet.getValue().getLang())
+                .append("] ").append(tweet.getValue().getText());
         try {
             emitter.send(sb.toString(), MediaType.TEXT_PLAIN);
         } catch (Exception e) {

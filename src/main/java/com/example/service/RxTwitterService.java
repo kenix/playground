@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import rx.Observable;
 import rx.Observer;
+import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 import rx.subjects.Subject;
 import twitter4j.Status;
@@ -44,7 +45,7 @@ public class RxTwitterService implements RxTwitter {
                     log.info("<RxTwitterService> sampling started");
                     ts.sample();
                     return ts;
-                }).exceptionally(ex -> {
+                }).exceptionally(ex -> { // TODO: timed re-establish
                     log.error("<RxTwitterService> ", ex);
                     this.subject.onError(ex);
                     return null;
@@ -68,7 +69,7 @@ public class RxTwitterService implements RxTwitter {
 
     @Override
     public Observable<Status> observe() {
-        return this.subject;
+        return this.subject.observeOn(Schedulers.io());
     }
 
     private static class SubscriberAdapter extends StatusAdapter {

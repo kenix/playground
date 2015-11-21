@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
  */
 @RestController
 @Slf4j
+@RequestMapping("/mine")
 public class MiningController {
 
     private final CoinMiner coinMiner;
@@ -35,7 +36,7 @@ public class MiningController {
         this.es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() - 1);
     }
 
-    @RequestMapping("/mine/{count}")
+    @RequestMapping("/{count}")
     public SseEmitter mine(@PathVariable int count) {
         final SseEmitter emitter = new SseEmitter();
         this.coinMiner.mineRx(count, this.es)

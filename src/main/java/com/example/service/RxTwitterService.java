@@ -17,7 +17,10 @@ import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
 
 import javax.annotation.PreDestroy;
+import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
+
+import static com.example.util.AsyncUtil.withTimeout;
 
 /**
  * An implementation of {@link RxTwitter} based on <a href="http://twitter4j.org">twitter4j</a>.
@@ -37,8 +40,8 @@ public class RxTwitterService implements RxTwitter {
 
     public RxTwitterService() {
         this.subject = PublishSubject.<Status>create();
-        this.twitterStream = CompletableFuture
-                .supplyAsync(() -> new TwitterStreamFactory().getInstance())
+        this.twitterStream = withTimeout(CompletableFuture
+                .supplyAsync(() -> new TwitterStreamFactory().getInstance()), Duration.ofSeconds(2))
                 .thenApply(ts -> {
                     log.info("<RxTwitterService> set up twitter subject");
                     ts.addListener(new SubscriberAdapter(this.subject));

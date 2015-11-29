@@ -21,7 +21,10 @@ import rx.subjects.Subject;
 
 import javax.annotation.PreDestroy;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
+
+import static com.example.util.AsyncUtil.withTimeout;
 
 /**
  * @author zzhao
@@ -36,11 +39,11 @@ public class RxMeetupService implements RxMeetup {
 
     public RxMeetupService() {
         this.subject = PublishSubject.<String>create();
-        this.meetupClient = CompletableFuture
+        this.meetupClient = withTimeout(CompletableFuture
                 .supplyAsync(() -> RxNetty.<ByteBuf, ByteBuf>newHttpClientBuilder("stream.meetup.com", 443)
                         .pipelineConfigurator(new HttpClientPipelineConfigurator<>())
                         .withSslEngineFactory(DefaultFactories.trustAll())
-                        .build())
+                        .build()), Duration.ofSeconds(2))
                 .thenApply(client -> {
                     log.info("<RxMeetupService> set up meetup subject");
                     final Observable<String> jsons = StringObservable.split(client

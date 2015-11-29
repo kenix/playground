@@ -18,7 +18,7 @@ import static com.example.util.CollectionUtil.last;
 /**
  * @author zzhao
  */
-public final class CustomerCollectors {
+public final class CustomCollectors {
 
     public static <T> Collector<T, ?, List<List<T>>> sliding(int size) {
         return sliding(size, 1);
@@ -38,7 +38,7 @@ public final class CustomerCollectors {
 
         private int stepIndex;
 
-        private List<T> nextWindow;
+        private List<T> nextWindow; // optional is not best suited for class field
 
         public SlidingCollector(int size, int step) {
             this.size = size;

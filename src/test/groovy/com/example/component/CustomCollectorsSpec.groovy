@@ -3,7 +3,7 @@ package com.example.component
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static com.example.component.CustomerCollectors.sliding;
+import static CustomCollectors.sliding;
 
 /**
  * Copied from <a href="http://www.nurkiewicz.com/2014/07/grouping-sampling-and-batching-custom.html?view=sidebar">
@@ -12,7 +12,7 @@ import static com.example.component.CustomerCollectors.sliding;
  * @author zzhao
  */
 @Unroll
-class CustomerCollectorsSpec extends Specification {
+class CustomCollectorsSpec extends Specification {
 
     def "Sliding window of #input with size #size and step of 1 is #output"() {
         expect:

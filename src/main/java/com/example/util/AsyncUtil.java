@@ -3,8 +3,6 @@
 */
 package com.example.util;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
-
 import java.time.Duration;
 import java.util.concurrent.*;
 import java.util.function.Function;
@@ -19,10 +17,11 @@ public final class AsyncUtil {
     }
 
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1,
-            new ThreadFactoryBuilder()
-                    .setDaemon(true)
-                    .setNameFormat("async-util-%d")
-                    .build());
+            r -> {
+                final Thread thread = new Thread(r, "async-util");
+                thread.setDaemon(true);
+                return thread;
+            });
 
     private static TimeoutException timeout(Duration duration) {
         return new TimeoutException("timeout after: " + duration);

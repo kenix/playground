@@ -4,12 +4,10 @@
 */
 package com.example.util;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Spliterator;
-import java.util.Spliterators;
+import java.util.*;
+import java.util.function.LongPredicate;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -40,5 +38,19 @@ public final class StreamUtil {
 
         final int size = list.size();
         return IntStream.rangeClosed(1, size).mapToObj(i -> list.get(size - i));
+    }
+
+    public static LongPredicate IS_PRIME = x -> x > 1 && !LongStream
+            .rangeClosed(2, Math.round(Math.floor(Math.sqrt(x))))
+            .parallel()
+            .filter(i -> x % i == 0)
+            .findAny()
+            .isPresent();
+
+    public static LongStream primeRange(long from, long to) {
+        return LongStream
+                .range(from, to)
+                .parallel()
+                .filter(IS_PRIME);
     }
 }

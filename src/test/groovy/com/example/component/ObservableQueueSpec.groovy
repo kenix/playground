@@ -22,7 +22,7 @@ class ObservableQueueSpec extends Specification {
         ooq.offer(2)
 
         then:
-        "[1, 2]".equals(result.toString())
+        "[1, 2]" == result.toString()
     }
 
     def "subject based observable queue should work"() {
@@ -36,6 +36,6 @@ class ObservableQueueSpec extends Specification {
         ooq.offer(2)
 
         then:
-        "[1, 2]".equals(result.toString())
+        "[1, 2]" == result.toString()
     }
 }

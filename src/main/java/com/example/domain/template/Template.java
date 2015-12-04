@@ -34,7 +34,7 @@ public class Template {
     private long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "mandator", referencedColumnName = "mandator_id")
+    @JoinColumn(name = "mandator", referencedColumnName = "id")
     private Mandator mandator;
 
     private String name;

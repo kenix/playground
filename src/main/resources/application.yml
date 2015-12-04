@@ -12,3 +12,8 @@ spring:
   h2:
     console:
       enabled: false
+---
+spring:
+  profiles: test
+server:
+  port: 0

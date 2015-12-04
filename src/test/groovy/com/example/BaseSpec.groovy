@@ -7,5 +7,5 @@ import spock.lang.Specification
  * @author zzhao
  */
 @ActiveProfiles(['test'])
-class BaseSpec extends Specification {
+abstract class BaseSpec extends Specification {
 }

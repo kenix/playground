@@ -11,5 +11,5 @@ import org.springframework.test.context.ContextConfiguration
         classes = JpaTestConfig.class,
         initializers = ConfigFileApplicationContextInitializer.class
 )
-class JpaBaseSpec extends BaseSpec {
+abstract class JpaBaseSpec extends BaseSpec {
 }

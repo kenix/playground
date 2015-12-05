@@ -4,21 +4,12 @@
 */
 package com.example.domain.template;
 
+import lombok.Getter;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import lombok.Getter;
 
 /**
  * @author zzhao
@@ -34,6 +25,9 @@ public class Section {
 
     @ManyToMany(mappedBy = "sections")
     private List<Template> templates = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    private SectionType type;
 
     private String docSectionIds;
 

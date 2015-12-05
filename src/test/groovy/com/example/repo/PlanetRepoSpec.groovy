@@ -2,17 +2,16 @@ package com.example.repo
 
 import com.example.domain.Person
 import com.example.domain.Planet
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.data.domain.PageRequest
 
 /**
  * @author zzhao
  */
+@Slf4j
 class PlanetRepoSpec extends JpaBaseSpec {
-
-    private static final Logger log = LoggerFactory.getLogger(PlanetRepoSpec.class);
 
     @Autowired
     PlanetRepo planetRepo
@@ -46,10 +45,10 @@ class PlanetRepoSpec extends JpaBaseSpec {
         this.planetRepo.count() == 2
         this.personRepo.count() == 3
 
-        this.planetRepo.findAll()
+        this.planetRepo.findAll(new PageRequest(0, 10))
                 .collect { it.name }
                 .sort() == ['Betelgeuse 5', 'Earth']
-        this.personRepo.findAll()
+        this.personRepo.findAll(new PageRequest(0, 10))
                 .collect { it.firstName }
                 .sort() == ['Arthur', 'Ford', 'Trillian']
     }

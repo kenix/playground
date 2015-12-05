@@ -4,10 +4,9 @@
 package com.example.repo;
 
 import com.example.domain.Planet;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * @author zzhao
  */
-public interface PlanetRepo extends JpaRepository<Planet, String> {
+public interface PlanetRepo extends RepoBase<Planet, String> {
 }

@@ -40,7 +40,7 @@ public final class StreamUtil {
         return IntStream.rangeClosed(1, size).mapToObj(i -> list.get(size - i));
     }
 
-    public static LongPredicate IS_PRIME = x -> x > 1 && !LongStream
+    public static final LongPredicate IS_PRIME = x -> x > 1 && !LongStream
             .rangeClosed(2, Math.round(Math.floor(Math.sqrt(x))))
             .parallel()
             .filter(i -> x % i == 0)

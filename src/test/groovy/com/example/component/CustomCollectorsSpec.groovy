@@ -12,6 +12,7 @@ import static CustomCollectors.sliding;
  * @author zzhao
  */
 @Unroll
+@SuppressWarnings("all")
 class CustomCollectorsSpec extends Specification {
 
     def "Sliding window of #input with size #size and step of 1 is #output"() {

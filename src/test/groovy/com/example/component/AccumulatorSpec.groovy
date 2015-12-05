@@ -12,31 +12,31 @@ import java.util.stream.LongStream
 class AccumulatorSpec extends Specification {
 
     @Shared
-    long A = 1
+    long a = 1
 
     @Shared
-    long B = 2
+    long b = 2
 
     @Shared
-    long C = 3
+    long c = 3
 
     @Shared
-    long D = -4
+    long d = -4
 
     @Shared
-    long INITIAL = 0L
+    long initial = 0L
 
     def 'should add few numbers'() {
         given:
-        def accumulator = new LongAccumulator({ long x, long y -> x + y }, INITIAL)
+        def accumulator = new LongAccumulator({ long x, long y -> x + y }, initial)
 
         when:
-        accumulator.accumulate(A)
-        accumulator.accumulate(B)
-        accumulator.accumulate(C)
-        accumulator.accumulate(D)
+        accumulator.accumulate(a)
+        accumulator.accumulate(b)
+        accumulator.accumulate(c)
+        accumulator.accumulate(d)
         then:
-        accumulator.get() == INITIAL + A + B + C + D
+        accumulator.get() == initial + a + b + c + d
     }
 
     @SuppressWarnings("all")
@@ -45,19 +45,19 @@ class AccumulatorSpec extends Specification {
         def accumulator = new LongAccumulator(operator, initial)
 
         when:
-        accumulator.accumulate(A)
-        accumulator.accumulate(B)
-        accumulator.accumulate(C)
-        accumulator.accumulate(D)
+        accumulator.accumulate(a)
+        accumulator.accumulate(b)
+        accumulator.accumulate(c)
+        accumulator.accumulate(d)
         then:
         accumulator.get() == result
 
         where:
         operator | initial | result
-                { x, y -> x + y } | 0 | A + B + C + D
-                { x, y -> x * y } | 1 | A * B * C * D
-                { x, y -> Math.max(x, y) } | Integer.MIN_VALUE | max(A, B, C, D)
-                { x, y -> Math.min(x, y) } | Integer.MAX_VALUE | min(A, B, C, D)
+                { x, y -> x + y } | 0 | a + b + c + d
+                { x, y -> x * y } | 1 | a * b * c * d
+                { x, y -> Math.max(x, y) } | Integer.MIN_VALUE | max(a, b, c, d)
+                { x, y -> Math.min(x, y) } | Integer.MAX_VALUE | min(a, b, c, d)
     }
 
     def max(long ... nums) {

@@ -34,6 +34,7 @@ ext {
     guavaVersion = '19.0-rc2'
     groovyVersion = '2.4.5'
     twitter4jVersion = '4.0.4'
+    jsoupVersion = '1.8.3'
 }
 
 dependencies {
@@ -49,6 +50,7 @@ dependencies {
     compile("com.google.guava:guava:${guavaVersion}")
     compile("net.sf.ehcache:ehcache")
     compile("org.twitter4j:twitter4j-stream:${twitter4jVersion}")
+    compile("org.jsoup:jsoup:${jsoupVersion}")
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile("org.codehaus.groovy:groovy-all:${groovyVersion}")

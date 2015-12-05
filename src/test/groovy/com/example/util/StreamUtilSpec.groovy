@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @Unroll
 class StreamUtilSpec extends Specification {
 
+    @SuppressWarnings("all")
     def "#type #elements reverse streaming: #output"() {
         expect:
         StreamUtil.reverse(elements).collect(Collectors.toList()) == output
@@ -26,6 +27,7 @@ class StreamUtilSpec extends Specification {
         'List'       | [1, 2, 3]               | [3, 2, 1]
     }
 
+    @SuppressWarnings("all")
     def "primes range from #from to #to: #primes"() {
         expect:
         Arrays.asList(StreamUtil

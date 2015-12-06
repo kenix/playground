@@ -4,101 +4,79 @@
 */
 package com.example.domain.template;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
-import javax.persistence.PostLoad;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import com.example.util.StreamUtil;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.domain.template.ActionName.*;
 
 /**
  * @author zzhao
  */
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "version")
 public class Version {
-    private static final String SEP = "°";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Getter
     private long id;
 
     @Lob
-    private String content;
+    private String commitMessage;
 
-    @Transient
-    @Getter
-    private List<String> texts;
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "version_text", joinColumns = @JoinColumn(name = "version_id"))
+    @OrderColumn(name = "section_text_idx", updatable = false, nullable = false)
+    private List<SectionText> sectionTexts;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<UserAction> userActions = new ArrayList<>();
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "version_action", joinColumns = @JoinColumn(name = "version_id"))
+    @OrderBy("timestamp DESC")
+    private List<UserAction> userActions = new ArrayList<>(5);
 
-    public Version(String userId, List<String> texts) {
-        this.texts = texts;
+    public Version(String userId, List<SectionText> sectionTexts, String commitMessage) {
+        this.sectionTexts = sectionTexts;
+        this.commitMessage = commitMessage;
         addUserAction(userId, Author);
     }
 
     public UserAction getAuthor() {
-        return this.userActions.get(0); // always the first action
+        return this.userActions.get(this.userActions.size() - 1); // always the first action
     }
 
     public UserAction getPmApprove() {
-        final Optional<UserAction> lastPmAction = StreamUtil
-                .reverse(this.userActions)
+        final UserAction lastPmAction = this.userActions
+                .stream()
                 .filter(UserAction::isPmAction)
-                .findFirst();
-        return lastPmAction.isPresent() && lastPmAction.get().getActionName() == ApprovePM
-                ? lastPmAction.get()
-                : null;
+                .findFirst()
+                .orElse(null);
+        return lastPmAction != null && lastPmAction.getActionName() == ApprovePM ? lastPmAction : null;
     }
 
     public UserAction getLcApprove() {
-        final Optional<UserAction> lastLcAction = StreamUtil
-                .reverse(this.userActions)
+        final UserAction lastLcAction = this.userActions
+                .stream()
                 .filter(UserAction::isLcAction)
-                .findFirst();
-        return lastLcAction.isPresent() && lastLcAction.get().getActionName() == ApproveLC
-                ? lastLcAction.get()
-                : null;
+                .findFirst()
+                .orElse(null);
+        return lastLcAction != null && lastLcAction.getActionName() == ApproveLC ? lastLcAction : null;
     }
 
     public UserAction getRelease() {
-        return StreamUtil
-                .reverse(this.userActions)
+        return this.userActions
+                .stream()
                 .filter(UserAction::isRelease)
                 .findFirst().orElse(null);
     }
 
-    @PrePersist
-    @PreUpdate
-    private void toContent() {
-        this.content = String.join(SEP, this.texts);
-    }
-
-    @PostLoad
-    private void toTexts() {
-        this.texts = Arrays.asList(this.content.split(SEP));
-    }
-
     private void addUserAction(String userId, ActionName actionName) {
-        this.userActions.add(actionName.by(userId));
+        this.userActions.add(0, actionName.by(userId));
     }
 
     public void pmApprove(String userId) {

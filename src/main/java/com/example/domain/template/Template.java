@@ -5,15 +5,14 @@
 package com.example.domain.template;
 
 import com.example.domain.Mandator;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 import javax.validation.ConstraintViolationException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author zzhao
@@ -24,26 +23,33 @@ import java.util.stream.Collectors;
                 @UniqueConstraint(name = "uk_mandator_template", columnNames = {"mandator_id", "name"})
         }
 )
-@NoArgsConstructor
 @Getter
-@ToString(of = {"id", "mandator", "name"})
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(of = {"id", "name", "mandator"})
 @EqualsAndHashCode(of = {"id"})
+@Slf4j
 public class Template {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "mandator_id", referencedColumnName = "id")
+    @ManyToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "mandator_id")
     private Mandator mandator;
 
     private String name;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "template_section",
+    @Getter(AccessLevel.NONE)
+    @ManyToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            fetch = FetchType.LAZY
+    )
+    @JoinTable(
+            name = "template_section",
             joinColumns = @JoinColumn(name = "template_id"),
-            inverseJoinColumns = @JoinColumn(name = "section_id"))
+            inverseJoinColumns = @JoinColumn(name = "section_id")
+    )
     private List<Section> sections = new ArrayList<>();
 
     public Template(Mandator mandator, String name) {
@@ -51,34 +57,39 @@ public class Template {
         this.name = name;
     }
 
-    public void addSection(Section section) {
-        this.sections.add(section);
+    public List<Section> getSections() {
+        return Collections.unmodifiableList(this.sections);
     }
 
-    @PrePersist
-    @PreUpdate
-    private void checkSections() {
-        final List<SectionType> dupTypes = this.sections
-                .stream()
-                .collect(Collectors
-                        .groupingBy(Section::getType, () -> new EnumMap<>(SectionType.class), Collectors.counting()))
-                .entrySet()
-                .stream()
-                .filter(e -> e.getValue() > 1)
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
-        if (!dupTypes.isEmpty()) {
-            throw new ConstraintViolationException("Multiple sections with same type: " + dupTypes,
+    public void addSection(Section section) {
+        checkSection(section);
+        this.sections.add(section);
+        section.associateTemplate(this);
+    }
+
+    private void checkSection(Section section) {
+        ensureUniqueType(section);
+        ensureSameMandator(section);
+    }
+
+    private void ensureSameMandator(Section section) {
+        final List<Template> templates = section.getTemplates();
+        if (!templates.isEmpty() && !templates.get(0).getMandator().equals(this.mandator)) {
+            throw new ConstraintViolationException(
+                    "Section from mandator: " + templates.get(0).getMandator().getZone()
+                            + " cannot be shared with mandator: " + this.mandator.getZone(),
                     Collections.emptySet());
         }
+    }
 
-        final List<String> mandators = this.sections
+    private void ensureUniqueType(Section section) {
+        final boolean typeExists = this.sections
                 .stream()
-                .flatMap(s -> s.getTemplates().stream().map(t -> t.getMandator().getName()))
-                .distinct()
-                .collect(Collectors.toList());
-        if (mandators.size() > 1) {
-            throw new ConstraintViolationException("Sharing sections among mandators: " + mandators,
+                .filter(s -> s.getType() == section.getType())
+                .findAny()
+                .isPresent();
+        if (typeExists) {
+            throw new ConstraintViolationException("Section with type: " + section.getType() + " already exists",
                     Collections.emptySet());
         }
     }

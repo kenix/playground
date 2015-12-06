@@ -5,10 +5,10 @@
 package com.example.domain;
 
 import com.example.domain.template.Template;
+import com.google.common.collect.ImmutableList;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +18,7 @@ import java.util.List;
 @Table(name = "mandator",
         indexes = {@Index(name = "idx_mandator_zone", columnList = "zone", unique = true)}
 )
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString(of = {"id", "zone", "name"})
 @EqualsAndHashCode(of = {"id"})
@@ -33,16 +33,14 @@ public class Mandator {
     @Setter
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "mandator",
-            orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Template> templates = new ArrayList<>();
+    @OneToMany(
+            mappedBy = "mandator",
+            fetch = FetchType.LAZY
+    )
+    private List<Template> templates = ImmutableList.of();
 
     public Mandator(String zone, String name) {
         this.zone = zone;
         this.name = name;
-    }
-
-    public void addTemplate(Template template) {
-        this.templates.add(template);
     }
 }

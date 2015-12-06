@@ -1,11 +1,10 @@
 package com.example.repo
 
 import com.example.domain.Mandator
-import com.example.domain.template.Section
-import com.example.domain.template.SectionType
-import com.example.domain.template.Template
+import com.example.domain.template.*
 import com.example.repo.template.SectionRepo
 import com.example.repo.template.TemplateRepo
+import com.example.repo.template.VersionRepo
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataIntegrityViolationException
@@ -25,7 +24,7 @@ import javax.validation.ConstraintViolationException
 class MandatorRepoSpec extends JpaBaseSpec {
 
     @Autowired
-    MandatorRepo mandatorRepo;
+    MandatorRepo mandatorRepo
 
     @Shared
     String mandatorZone = 'abc'
@@ -37,13 +36,16 @@ class MandatorRepoSpec extends JpaBaseSpec {
     TemplateRepo templateRepo
 
     @Shared
-    String templateNameA = 'temp_a';
+    String templateNameA = 'temp_a'
 
     @Shared
-    String templateNameB = 'temp_b';
+    String templateNameB = 'temp_b'
 
     @Autowired
-    SectionRepo sectionRepo;
+    SectionRepo sectionRepo
+
+    @Autowired
+    VersionRepo versionRepo
 
     @Rollback(false)
     def "mandator with zone abc"() {
@@ -51,7 +53,7 @@ class MandatorRepoSpec extends JpaBaseSpec {
         def mandator = new Mandator(this.mandatorZone, this.mandatorName)
 
         when:
-        this.mandatorRepo.save(mandator);
+        this.mandatorRepo.save(mandator)
         then:
         mandator.id
 
@@ -68,7 +70,7 @@ class MandatorRepoSpec extends JpaBaseSpec {
         this.mandatorRepo.save(new Mandator(this.mandatorZone, 'def GmbH'))
         then:
         def e = thrown(DataIntegrityViolationException)
-        log.info("{}", e.message);
+        log.info("{}", e.message)
     }
 
     @Rollback(false)
@@ -120,11 +122,11 @@ class MandatorRepoSpec extends JpaBaseSpec {
         this.templateRepo.save(new Template(mandator, templateNameA))
         then:
         def e = thrown(DataIntegrityViolationException)
-        log.info("{}", e.message);
+        log.info("{}", e.message)
     }
 
     @Rollback(false)
-    def "abc,temp_a,sec_meta,sec_desc_sec_misc"() {
+    def "abc,temp_a,sec_meta,sec_desc,sec_misc"() {
         given:
         def mandator = this.mandatorRepo.findByZone(this.mandatorZone)
         def tempA = this.templateRepo.findByMandatorAndName(mandator, templateNameA)
@@ -230,7 +232,7 @@ class MandatorRepoSpec extends JpaBaseSpec {
         secList == [secRisk]
     }
 
-    def "abc,temp_a,sec_meta,sec_desc_sec_misc cannot take another sec_risk from mandator bcd"() {
+    def "abc,temp_a,sec_meta,sec_desc,sec_misc cannot take another sec_risk from mandator bcd"() {
         given:
         def abc = this.mandatorRepo.findByZone(this.mandatorZone)
         def tempA = this.templateRepo.findByMandatorAndName(abc, this.templateNameA)
@@ -241,5 +243,80 @@ class MandatorRepoSpec extends JpaBaseSpec {
         then:
         def e = thrown(ConstraintViolationException)
         log.info("{}", e.message);
+    }
+
+    @Rollback(false)
+    def "abc,temp_a,sec_meta,init,commit_1,pm_appr,lc_appr,release"() {
+        given:
+        def mandator = this.mandatorRepo.findByZone(this.mandatorZone)
+        def tempA = this.templateRepo.findByMandatorAndName(mandator, this.templateNameA)
+        def secMeta = this.sectionRepo.findByTemplateAndType(tempA, SectionType.Meta)
+
+        when:
+        def init = new Version('xyz', [new SectionText('*blah*: blah')], 'initial commit')
+        this.versionRepo.save(init)
+        then:
+        init.id
+
+        when:
+        def init0 = this.versionRepo.findOne(init.id)
+        then:
+        init0.id == init.id
+        init0.commitMessage == init.commitMessage
+        init0.author
+        !init0.pmApprove
+        !init0.lcApprove
+        !init0.release
+
+
+        when:
+        secMeta.commitVersion(init)
+        this.sectionRepo.save(secMeta)
+        def secMeta0 = this.sectionRepo.findByTemplateAndType(tempA, SectionType.Meta)
+        then:
+        secMeta0.versions == [init]
+
+        when:
+        def commit_1 = new Version('pm', [new SectionText('*foo*: bar')], 'foo bar')
+        this.versionRepo.save(commit_1)
+        then:
+        commit_1.id
+        commit_1.author.userId == 'pm'
+        !commit_1.pmApprove
+        !commit_1.lcApprove
+        !commit_1.release
+
+        when:
+        secMeta.commitVersion(commit_1)
+        this.sectionRepo.save(secMeta)
+        secMeta0 = this.sectionRepo.findByTemplateAndType(tempA, SectionType.Meta)
+        then:
+        secMeta0.versions == [commit_1, init]
+
+        when:
+        def commit_1A = this.versionRepo.findOne(commit_1.id)
+        commit_1.pmApprove('pm')
+        this.versionRepo.save(commit_1)
+        then:
+        commit_1A.pmApprove
+        commit_1A.userActions.collect { it.actionName } == [ActionName.ApprovePM, ActionName.Author]
+
+        when:
+        commit_1.lcApprove('lc')
+        this.versionRepo.save(commit_1)
+        then:
+        commit_1A.lcApprove
+        commit_1A.userActions.collect {
+            it.actionName
+        } == [ActionName.ApproveLC, ActionName.ApprovePM, ActionName.Author]
+
+        when:
+        commit_1.release('pm')
+        this.versionRepo.save(commit_1)
+        then:
+        commit_1A.release
+        commit_1A.userActions.collect {
+            it.actionName
+        } == [ActionName.Release, ActionName.ApproveLC, ActionName.ApprovePM, ActionName.Author]
     }
 }

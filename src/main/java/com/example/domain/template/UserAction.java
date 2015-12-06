@@ -7,6 +7,7 @@ package com.example.domain.template;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
@@ -19,6 +20,7 @@ import static com.example.domain.template.ActionName.*;
 /**
  * @author zzhao
  */
+@ToString(of = {"userId"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
 @Getter

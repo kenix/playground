@@ -21,4 +21,8 @@ public interface SectionRepo extends RepoBase<Section, Long> {
     List<Section> findByTemplate(@Param("template") Template template);
 
     List<Section> findByType(SectionType type);
+
+    @Query("select s from Section s inner join s.templates t where t = :template and s.type = :sectionType")
+    Section findByTemplateAndType(@Param("template") Template template,
+                                  @Param("sectionType") SectionType sectionType);
 }

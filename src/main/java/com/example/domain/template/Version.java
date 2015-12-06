@@ -5,6 +5,7 @@
 package com.example.domain.template;
 
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +18,7 @@ import static com.example.domain.template.ActionName.*;
 /**
  * @author zzhao
  */
+@EqualsAndHashCode(of = "id")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -97,5 +99,10 @@ public class Version {
 
     public void release(String userId) {
         addUserAction(userId, Release);
+    }
+
+    @Override
+    public String toString() {
+        return "Version{" + this.id + ";" + getAuthor() + ";" + this.commitMessage + "}";
     }
 }

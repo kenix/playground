@@ -46,7 +46,7 @@ public class Section implements Comparable<Section> {
             joinColumns = @JoinColumn(name = "section_id"),
             inverseJoinColumns = @JoinColumn(name = "version_id")
     )
-    @OrderBy("version_id DESC")
+    @OrderBy("id DESC")
     private List<Version> versions = new ArrayList<>(5);
 
     public Section(SectionType type, String docSectionIds) {
@@ -67,7 +67,7 @@ public class Section implements Comparable<Section> {
     }
 
     public void commitVersion(Version version) {
-        this.versions.add(version);
+        this.versions.add(0, version);
     }
 
     public List<String> getDocSectionIds() {

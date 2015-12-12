@@ -8,7 +8,7 @@ import com.example.repo.template.VersionRepo
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataIntegrityViolationException
-import org.springframework.test.annotation.Rollback
+import org.springframework.test.annotation.Commit
 import org.springframework.transaction.annotation.Transactional
 import spock.lang.Shared
 import spock.lang.Stepwise
@@ -47,7 +47,7 @@ class MandatorRepoSpec extends JpaBaseSpec {
     @Autowired
     VersionRepo versionRepo
 
-    @Rollback(false)
+    @Commit
     def "mandator with zone abc"() {
         given:
         def mandator = new Mandator(this.mandatorZone, this.mandatorName)
@@ -73,7 +73,7 @@ class MandatorRepoSpec extends JpaBaseSpec {
         log.info("{}", e.message)
     }
 
-    @Rollback(false)
+    @Commit
     def "abc,temp_a"() {
         given:
         def mandator = this.mandatorRepo.findByZone(this.mandatorZone)
@@ -93,7 +93,7 @@ class MandatorRepoSpec extends JpaBaseSpec {
         tempA0.name == templateNameA
     }
 
-    @Rollback(false)
+    @Commit
     def "abc,temp_b"() {
         given:
         def mandator = this.mandatorRepo.findByZone(this.mandatorZone)
@@ -125,7 +125,7 @@ class MandatorRepoSpec extends JpaBaseSpec {
         log.info("{}", e.message)
     }
 
-    @Rollback(false)
+    @Commit
     def "abc,temp_a,sec_meta,sec_desc,sec_misc"() {
         given:
         def mandator = this.mandatorRepo.findByZone(this.mandatorZone)
@@ -180,7 +180,7 @@ class MandatorRepoSpec extends JpaBaseSpec {
         log.info("{}", e.message);
     }
 
-    @Rollback(false)
+    @Commit
     def "mandator with zone bcd"() {
         given:
         def bcd = new Mandator('bcd', 'bcd AG')
@@ -192,7 +192,7 @@ class MandatorRepoSpec extends JpaBaseSpec {
         this.mandatorRepo.count() == 2
     }
 
-    @Rollback(false)
+    @Commit
     def "bcd,temp_a"() {
         given:
         def bcd = this.mandatorRepo.findByZone('bcd')
@@ -212,7 +212,7 @@ class MandatorRepoSpec extends JpaBaseSpec {
         tempA0.name == templateNameA
     }
 
-    @Rollback(false)
+    @Commit
     def "bcd,temp_a,sec_risk"() {
         given:
         def mandator = this.mandatorRepo.findByZone('bcd')
@@ -245,7 +245,7 @@ class MandatorRepoSpec extends JpaBaseSpec {
         log.info("{}", e.message);
     }
 
-    @Rollback(false)
+    @Commit
     def "abc,temp_a,sec_meta,init,commit_1,pm_appr,lc_appr,release"() {
         given:
         def mandator = this.mandatorRepo.findByZone(this.mandatorZone)

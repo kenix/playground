@@ -2,7 +2,7 @@
 * vwd KL
 * Created by zzhao on 11/18/15 1:40 PM
 */
-package com.example.service;
+package com.example.util;
 
 import rx.Observable;
 import rx.Single;

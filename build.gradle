@@ -35,6 +35,7 @@ ext {
     groovyVersion = '2.4.5'
     twitter4jVersion = '4.0.4'
     jsoupVersion = '1.8.3'
+    reactorVersion = '1.1.6.RELEASE'
 }
 
 dependencies {
@@ -43,17 +44,25 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-data-rest')
     compile('org.springframework.data:spring-data-rest-hal-browser')
+    compile('org.springframework.boot:spring-boot-starter-websocket')
     compile("com.h2database:h2")
-    compile("io.reactivex:rxjava:${rxJavaVersion}")
-    compile("io.reactivex:rxjava-string:${rxJavaStringVersion}")
-    compile("io.reactivex:rxnetty:${rxNettyVersion}")
-    compile("org.projectlombok:lombok:${lombokVersion}")
-    compile("com.google.guava:guava:${guavaVersion}")
+    compile("io.reactivex:rxjava:$rxJavaVersion")
+    compile("io.reactivex:rxjava-string:$rxJavaStringVersion")
+    compile("io.reactivex:rxnetty:$rxNettyVersion")
+    compile("org.projectlombok:lombok:$lombokVersion")
+    compile("com.google.guava:guava:$guavaVersion")
     compile("net.sf.ehcache:ehcache")
-    compile("org.twitter4j:twitter4j-stream:${twitter4jVersion}")
-    compile("org.jsoup:jsoup:${jsoupVersion}")
+    compile("org.twitter4j:twitter4j-stream:$twitter4jVersion")
+    compile("org.jsoup:jsoup:$jsoupVersion")
+    compile("org.projectreactor:reactor-net:$reactorVersion")
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
-    testCompile("org.codehaus.groovy:groovy-all:${groovyVersion}")
+    testCompile("org.codehaus.groovy:groovy-all:$groovyVersion")
     testCompile("org.spockframework:spock-spring")
+}
+
+test {
+    testLogging {
+        events 'started', 'passed'
+    }
 }

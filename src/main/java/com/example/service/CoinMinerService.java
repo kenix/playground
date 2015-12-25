@@ -5,6 +5,7 @@
 package com.example.service;
 
 import com.example.api.CoinMiner;
+import com.example.util.Futures;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import rx.Observable;

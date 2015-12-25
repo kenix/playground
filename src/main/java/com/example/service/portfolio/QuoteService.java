@@ -43,12 +43,16 @@ public class QuoteService implements ApplicationListener<BrokerAvailabilityEvent
 
     @Scheduled(fixedDelay = 2000)
     public void sendQuotes() {
+        if (log.isDebugEnabled()) {
+            log.debug("<sendQuotes> ");
+        }
         this.quoteGenerator
                 .generateQuotes()
                 .peek(quote -> {
-                    if (log.isTraceEnabled()) {
-                        log.trace("<sendQuotes> {}", quote);
+                    if (log.isDebugEnabled()) {
+                        log.debug("<sendQuotes> {}", quote);
                     }
+
                 })
                 .forEach(quote -> {
                     if (this.brokerAvailable.get()) {

@@ -27,7 +27,7 @@ repositories {
 }
 
 ext {
-    rxJavaVersion = '1.0.16'
+    rxJavaVersion = '1.1.3'
     rxJavaStringVersion = '1.0.1'
     rxNettyVersion = '0.5.1'
     lombokVersion = '1.16.8'

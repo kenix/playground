@@ -2,11 +2,10 @@ package com.example.repo
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.aop.AopAutoConfiguration
+import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.autoconfigure.groovy.template.GroovyTemplateAutoConfiguration
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration
-import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration
 import org.springframework.boot.autoconfigure.web.*
-import org.springframework.boot.orm.jpa.EntityScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.PropertySource
 import org.springframework.context.annotation.PropertySources
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
  */
 @Configuration
 @EnableAutoConfiguration(exclude = [
-        SecurityAutoConfiguration.class,
         ServerPropertiesAutoConfiguration.class,
         EmbeddedServletContainerAutoConfiguration.class,
         HttpMessageConvertersAutoConfiguration.class,

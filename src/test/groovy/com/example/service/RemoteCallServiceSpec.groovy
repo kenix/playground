@@ -5,8 +5,8 @@
 package com.example.service
 
 import com.example.DemoApplication
-import org.springframework.boot.test.ConfigFileApplicationContextInitializer
-import org.springframework.boot.test.SpringApplicationContextLoader
+import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer
+import org.springframework.boot.test.context.SpringBootContextLoader
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
@@ -15,7 +15,7 @@ import spock.lang.Specification
  * @author zzhao
  */
 @ContextConfiguration(
-        loader = SpringApplicationContextLoader,
+        loader = SpringBootContextLoader,
         classes = DemoApplication,
         initializers = ConfigFileApplicationContextInitializer
 )

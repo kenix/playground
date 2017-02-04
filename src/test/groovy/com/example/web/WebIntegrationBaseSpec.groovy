@@ -2,7 +2,7 @@ package com.example.web
 
 import com.example.BaseSpec
 import com.example.DemoApplication
-import org.springframework.boot.test.WebIntegrationTest
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ContextConfiguration
 
 /**
@@ -11,6 +11,6 @@ import org.springframework.test.context.ContextConfiguration
 @ContextConfiguration(
         classes = DemoApplication.class
 )
-@WebIntegrationTest(randomPort = true)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 abstract class WebIntegrationBaseSpec extends BaseSpec {
 }

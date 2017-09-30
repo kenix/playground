@@ -71,10 +71,13 @@ dependencies {
     compile("net.sf.ehcache:ehcache")
     compile("org.twitter4j:twitter4j-stream")
     compile("org.jsoup:jsoup")
+    compile "io.projectreactor:reactor-core:3.0.5.RELEASE"
     compile("org.projectreactor:reactor-net")
 
     compile("com.netflix.hystrix:hystrix-core")
     compile("com.netflix.hystrix:hystrix-javanica")
+    compile "io.springfox:springfox-swagger2:2.6.1"
+    compile "io.springfox:springfox-swagger-ui:2.6.1"
 
     // compile('org.springframework.hateoas:spring-hateoas')
 

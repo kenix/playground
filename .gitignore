@@ -16,3 +16,4 @@ styles.scss.cache
 prosemirror/dist
 prosemirror/node_modules
 npm-debug.log
+twitter4j.properties

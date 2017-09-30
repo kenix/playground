@@ -1,15 +1,15 @@
 buildscript {
-    ext {
-        springBootVersion = '1.5.1.RELEASE'
-        depManagementPluginVersion = '1.0.0.RELEASE'
-    }
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
-        classpath "io.spring.gradle:dependency-management-plugin:$depManagementPluginVersion"
-    }
+  ext {
+    springBootVersion = '1.5.7.RELEASE'
+    depManagementPluginVersion = '1.0.3.RELEASE'
+  }
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+    classpath "io.spring.gradle:dependency-management-plugin:$depManagementPluginVersion"
+  }
 }
 
 
@@ -20,94 +20,93 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.springframework.boot'
 
 jar {
-    baseName = 'playground'
-    version = '0.0.1-SNAPSHOT'
+  baseName = 'playground'
+  version = '0.0.1-SNAPSHOT'
 }
 
 ext {
-    versionHystrix = '1.5.9'
+  versionHystrix = '1.5.9'
 }
 
 dependencyManagement {
-    // reference: https://github.com/spring-gradle-plugins/dependency-management-plugin
-    imports {
-        mavenBom "org.springframework.boot:spring-boot-starter-parent:$springBootVersion"
-    }
+  // reference: https://github.com/spring-gradle-plugins/dependency-management-plugin
+  imports {
+    mavenBom "org.springframework.boot:spring-boot-starter-parent:$springBootVersion"
+  }
 
-    dependencies {
-        dependency "org.codehaus.groovy:groovy-all:2.4.8"
-        dependency "com.google.guava:guava:20.0"
-        dependency "org.spockframework:spock-core:1.1-groovy-2.4-rc-3"
-        dependency("com.netflix.hystrix:hystrix-core:$versionHystrix")
-        dependency("com.netflix.hystrix:hystrix-javanica:$versionHystrix")
-        dependency("org.twitter4j:twitter4j-stream:4.0.6")
-        dependency("org.jsoup:jsoup:1.10.2")
-        dependency("org.projectreactor:reactor-net:1.1.6.RELEASE")
-        dependency('io.reactivex.rxjava2:rxjava:2.0.5')
-        dependency("io.reactivex:rxjava-string:1.1.1")
-        dependency("io.reactivex:rxnetty:0.5.1")
-    }
+  dependencies {
+    dependency "com.google.guava:guava:23.0"
+    dependency "org.spockframework:spock-core:1.1-groovy-2.4"
+    dependency("com.netflix.hystrix:hystrix-core:$versionHystrix")
+    dependency("com.netflix.hystrix:hystrix-javanica:$versionHystrix")
+    dependency("org.twitter4j:twitter4j-stream:4.0.6")
+    dependency("org.jsoup:jsoup:1.10.2")
+    dependency("org.projectreactor:reactor-net:1.1.6.RELEASE")
+    dependency('io.reactivex.rxjava2:rxjava:2.0.5')
+    dependency("io.reactivex:rxjava-string:1.1.1")
+    dependency("io.reactivex:rxnetty:0.5.1")
+  }
 }
 
 repositories {
-    mavenCentral()
+  mavenCentral()
 }
 
 dependencies {
-    compile('org.springframework.boot:spring-boot-starter-actuator')
-    compile('org.springframework.boot:spring-boot-starter-web')
-    // compile('org.springframework.boot:spring-boot-starter-security')
-    compile('org.springframework.boot:spring-boot-starter-data-jpa')
-    compile('org.springframework.boot:spring-boot-starter-data-rest')
-    compile('org.springframework.data:spring-data-rest-hal-browser')
-    compile('org.springframework.boot:spring-boot-starter-websocket')
-    // compile('org.springframework.integration:spring-integration-jmx')
-    compile("com.h2database:h2")
-    compile("io.reactivex.rxjava2:rxjava")
-    compile("io.reactivex:rxjava-string")
-    compile("io.reactivex:rxnetty")
-    compile("org.projectlombok:lombok")
-    compile("com.google.guava:guava")
-    compile("net.sf.ehcache:ehcache")
-    compile("org.twitter4j:twitter4j-stream")
-    compile("org.jsoup:jsoup")
-    compile "io.projectreactor:reactor-core:3.0.5.RELEASE"
-    compile("org.projectreactor:reactor-net")
+  compile('org.springframework.boot:spring-boot-starter-actuator')
+  compile('org.springframework.boot:spring-boot-starter-web')
+  // compile('org.springframework.boot:spring-boot-starter-security')
+  compile('org.springframework.boot:spring-boot-starter-data-jpa')
+  compile('org.springframework.boot:spring-boot-starter-data-rest')
+  compile('org.springframework.data:spring-data-rest-hal-browser')
+  compile('org.springframework.boot:spring-boot-starter-websocket')
+  // compile('org.springframework.integration:spring-integration-jmx')
+  compile("com.h2database:h2")
+  compile("io.reactivex.rxjava2:rxjava")
+  compile("io.reactivex:rxjava-string")
+  compile("io.reactivex:rxnetty")
+  compile("org.projectlombok:lombok")
+  compile("com.google.guava:guava")
+  compile("net.sf.ehcache:ehcache")
+  compile("org.twitter4j:twitter4j-stream")
+  compile("org.jsoup:jsoup")
+  compile "io.projectreactor:reactor-core:3.0.5.RELEASE"
+  compile("org.projectreactor:reactor-net")
 
-    compile("com.netflix.hystrix:hystrix-core")
-    compile("com.netflix.hystrix:hystrix-javanica")
-    compile "io.springfox:springfox-swagger2:2.6.1"
-    compile "io.springfox:springfox-swagger-ui:2.6.1"
+  compile("com.netflix.hystrix:hystrix-core")
+  compile("com.netflix.hystrix:hystrix-javanica")
+  compile "io.springfox:springfox-swagger2:2.6.1"
+  compile "io.springfox:springfox-swagger-ui:2.6.1"
 
-    // compile('org.springframework.hateoas:spring-hateoas')
+  // compile('org.springframework.hateoas:spring-hateoas')
 
-    testCompile('org.springframework.boot:spring-boot-starter-test')
-    testCompile("org.codehaus.groovy:groovy-all")
-    testCompile("org.spockframework:spock-spring")
+  testCompile('org.springframework.boot:spring-boot-starter-test')
+  testCompile("org.codehaus.groovy:groovy-all")
+  testCompile("org.spockframework:spock-spring")
 }
 
 test {
-    maxParallelForks = 2
-    forkEvery = 50
+  maxParallelForks = 2
+  forkEvery = 50
 
-    testLogging {
-        events 'started', 'passed'
-    }
+  testLogging {
+    events 'started', 'passed'
+  }
 }
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
     }
+  }
 }
 
 apply plugin: 'idea'
 
 idea {
-    module {
-        downloadJavadoc = true
-        downloadSources = true
-    }
+  module {
+    downloadJavadoc = true
+    downloadSources = true
+  }
 }

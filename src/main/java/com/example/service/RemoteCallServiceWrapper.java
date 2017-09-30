@@ -13,19 +13,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class RemoteCallServiceWrapper implements RemoteCallService {
 
-    private RemoteCallService delegate;
+  private RemoteCallService delegate;
 
-    void setDelegate(RemoteCallService delegate) {
-        this.delegate = delegate;
-    }
+  void setDelegate(RemoteCallService delegate) {
+    this.delegate = delegate;
+  }
 
-    @Override
-    @HystrixCommand(fallbackMethod = "fallbackCall")
-    public String call(String req) throws Exception {
-        return this.delegate.call(req);
-    }
+  @Override
+  @HystrixCommand(fallbackMethod = "fallbackCall")
+  public String call(String req) throws Exception {
+    return this.delegate.call(req);
+  }
 
-    public String fallbackCall(String req) {
-        return "FALLBACK: " + req;
-    }
+  public String fallbackCall(String req) {
+    return "FALLBACK: " + req;
+  }
 }
